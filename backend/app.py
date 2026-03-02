@@ -5,6 +5,7 @@ from flask import Flask, jsonify, send_from_directory, make_response, request
 from datetime import datetime, timedelta
 from urllib.parse import urlparse
 import hmac
+import html as html_mod
 import json
 import os
 import re
@@ -33,11 +34,12 @@ def get_yesterday_date_str():
 
 
 def clean_text(value, max_len=200):
-    """输入清洗：去控制字符、去首尾空格、限长。"""
+    """输入清洗：去控制字符、去首尾空格、限长、转义HTML实体。"""
     if value is None:
         return ""
     text = str(value)
     text = CONTROL_CHAR_RE.sub("", text).strip()
+    text = html_mod.escape(text)
     if len(text) > max_len:
         text = text[:max_len]
     return text
